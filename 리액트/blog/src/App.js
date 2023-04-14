@@ -1,20 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
+import { renderIntoDocument } from 'react-dom/test-utils';
 
 function App() {
 
   let post = '역삼우동맛집';
+  let array = [20, 15, 12];
   let [logo, setLogo] = useState('ReactBlog');
   let [a, b] = useState(['여름 코트 추천', '역삼 우동 맛집', '리액트 독학']);
   //let [title, t] = useState('역삼 우동 맛집');
   //let [title2, t2] = useState('리액트 독학');
   // document.querySelector('h4').innerHTML(post);
-  let[따봉, 따봉변경] = useState(0);
+  let[따봉, 따봉변경] = useState(array);
+  let[modal, setModal] = useState(false); // ui현재상태 : 열림, 닫힘, 보임, 1, true
 
-  function 함수(){
-    console.log(1);
-  }
+  // 모든 array 뒤에 map() 사용가능
+  // array의 자료 개수만큼 함수 안의 코드 실행해줌
+  // 함수의 파라미터는 array 안에 있는 자료임
+  // return에 뭐 적으면 array 담아줌
+
+  [1,2,3].map(function(a){
+    return '123321';
+    console.log(a);
+  });
 
   return (
     <div className="App">
@@ -73,11 +82,11 @@ function App() {
         }
         <h4 style={{color:'red', fontSize:"16px"}}>{logo}</h4>
       </div>
-      <div className="list">
+      {/* <div className="list">
         <h4>{a[0]} <span onClick={() => {따봉변경(따봉 + 1)}}>👍</span>      {따봉} </h4>
         <p>4월 13일 발행</p>
         <button onClick={()=>{
-            // b(['가을 코트 추천', '역삼 우동 맛집', '리액트 독학'])
+           // b(['가을 코트 추천', '역삼 우동 맛집', '리액트 독학'])
            // a[0] = '가을 코트 추천';
            // b(a);
            let copy = [...a];
@@ -90,9 +99,55 @@ function App() {
         <p>4월 13일 발행</p>
       </div>
       <div className="list">
-        <h4>{a[2]}</h4>
+        <h4 onClick={() =>{
+            setModal(!modal)
+          }
+          }>{a[2]}</h4>
         <p>4월 13일 발행</p>
-      </div>
+      </div> */}
+
+      {
+        a.map(function(b, i){ // a: 순차적으로 접근한 요소 / i: 인덱스
+          return (
+              <div className="list">
+                <h4>{a[i]}
+                <span onClick={() => {
+                  let copy = [...따봉];
+                  copy[i] ++;
+                  따봉변경(copy)}}>👍</span> {따봉[i]}</h4>
+                  <p>4월 13일 발행</p>
+              </div>
+            )
+        })
+      }
+
+      {/* <Modal></Modal> */}
+      
+      { // 자바스크립트 쓰려면 이거 열기
+        modal == true ? <Modal/> : null
+      }
+
+
+
+
+      {/*
+        * 리액트에서 동적인 UI(원래 없었는데 생기는거) 만드는 STEP
+        1. HTML, CSS로 미리 UI디자인 해놓기
+        2. UI의 현재상태를 state로 저장해두기
+        3. state의 상태에 따라서 UI가 어떻게 보일지 조건문 작성
+
+        ** 챌린지 : 글제목을 클릭하면 모달창이 보이게
+        ** 힌트 : 글제목 누르면 html 보이게해주세요x
+                  글제목 누르면 state의 값을 변경해주세요
+        ** 챌린지 2탄 글제목 한번 더 누르면 모달창이
+      */
+      }
+
+
+      
+      
+
+      
       <button type="button" onClick={() => {
         let copy2 = [...a];
         copy2 = copy2.sort();
@@ -102,5 +157,45 @@ function App() {
     </div>
   );
 }
+
+
+/*
+* 컴포넌트(축약한 HTML 덩어리) 만드는법
+1. function 만들고
+2. return() 안에 html 담기
+3. <함수명></함수명> 쓰기
+
+* 컴포넌트 만들때 주의 사항
+1. component 작명할 땐 영어 대문자로 시작하게 작명
+2. retunr(<div></div>)안에 html 태그들이 평행하게 여러개 들어가면 x
+3. function App(){} 내부에 만들면 안된다.
+
+* 어떤 HTML들을 Component로 만드는게 좋을까?
+- 사이트에 반복해서 출현하는 HTML 덩어리
+- 긴 코드를 축약
+- 다른 곳에서 코드 재사용 할때
+- 복잡한 코드를 작은 기능으로 나눌때
+
+* 컴포넌트의 단점
+- 한 function 안에 있는 변수를 다른 function에서 호출 할 수 없음
+- props 문법을 이용해서 state <Modal>까지 전달해줘야 사용할 수 있음
+
+* 챌린지 : 연습삼아 다른 컴포넌트 1개 만들기
+
+*/
+
+
+
+function Modal(){
+  return(
+    <div className="modal">
+      <h4>제목</h4>
+      <p>날짜</p>
+      <p>상세내용</p>
+    </div>
+  )
+}
+
+
 
 export default App;
