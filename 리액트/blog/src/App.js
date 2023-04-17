@@ -6,14 +6,16 @@ import { renderIntoDocument } from 'react-dom/test-utils';
 function App() {
 
   let post = '역삼우동맛집';
-  let array = [20, 15, 12];
   let [logo, setLogo] = useState('ReactBlog');
   let [a, b] = useState(['여름 코트 추천', '역삼 우동 맛집', '리액트 독학']);
   //let [title, t] = useState('역삼 우동 맛집');
   //let [title2, t2] = useState('리액트 독학');
   // document.querySelector('h4').innerHTML(post);
-  let[따봉, 따봉변경] = useState(array);
+  let[따봉, 따봉변경] = useState([0,0,0]);
   let[modal, setModal] = useState(false); // ui현재상태 : 열림, 닫힘, 보임, 1, true
+  let[title, setTitle] = useState(0);
+  let[입력값, 입력값변경] = useState('');
+  
 
   // 모든 array 뒤에 map() 사용가능
   // array의 자료 개수만큼 함수 안의 코드 실행해줌
@@ -110,21 +112,51 @@ function App() {
         a.map(function(b, i){ // a: 순차적으로 접근한 요소 / i: 인덱스
           return (
               <div className="list">
-                <h4>{a[i]}
-                <span onClick={() => {
+                <h4 onClick={()=>{
+                  setModal(!modal);
+                  setTitle(i);
+                }}>{a[i]}
+                <span onClick={(e) => {
+                  e.stopPropagation(); // 이벤트 버블링 막아주는
                   let copy = [...따봉];
                   copy[i] ++;
-                  따봉변경(copy)}}>👍</span> {따봉[i]}</h4>
+                  따봉변경(copy)}}>👍</span> {따봉[i]}
+                  </h4>
                   <p>4월 13일 발행</p>
+                  <button onClick={()=>{
+                    a.splice(i,1);
+                    따봉.splice(i,1);
+                    console.log(a);
+                    console.log(따봉);
+                  }}>삭제</button>
               </div>
             )
         })
       }
 
+      {
+        /*
+        * 챌린지2 : 버튼 누르면 글 하나 추가되는 기능 만들기
+        * 챌린지3 : 글마다 삭제버튼 만들고 삭제 되는 기능
+        */
+
+      }
+
+      <input onChange={(e)=>{
+        입력값변경(e.target.value); // 성격급한 자스  
+      }}/>
+
+      <button onClick={(e)=>{
+        b(a => [...a, 입력값]);
+        따봉변경(따봉 => [...따봉, 0]);
+        console.log(a);
+      }}>배열에 추가</button>
+      
+
       {/* <Modal></Modal> */}
       
       { // 자바스크립트 쓰려면 이거 열기
-        modal == true ? <Modal/> : null
+        modal == true ? <Modal color={'skyblue'} a={a} b={b} title={title} /> : null
       }
 
 
@@ -184,17 +216,32 @@ function App() {
 
 */
 
+/*
+  부모 -> 자식 state 전송하는 방법
+  1. <자식컴포넌트 작명={state 이름}> => 호출했던 곳
+  2. props 파라미터 등록 후 props.작명 사용
 
+  챌린지1 : 글 수정 버튼 누르면 첫 글제목이 겨울코트 추천으로 바뀌는
+*/
 
-function Modal(){
-  return(
-    <div className="modal">
-      <h4>제목</h4>
-      <p>날짜</p>
-      <p>상세내용</p>
-    </div>
-  )
-}
+function Modal(props){
+  
+    return(
+      
+      <div className="modal" style={{background:props.color}}>
+        <h4>{props.a[props.title]}</h4>
+        <p>날짜</p>
+        <p>상세내용</p>
+        <button onClick={()=>{
+             let copy = [...props.a];
+             copy[0] = '겨울 코트 추천';
+             props.b(copy);
+        }}>글수정</button>
+      </div>
+      
+    )
+
+  }
 
 
 
