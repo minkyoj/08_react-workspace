@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { renderIntoDocument } from 'react-dom/test-utils';
 
 function App() {
@@ -26,6 +26,27 @@ function App() {
     return '123321';
     console.log(a);
   });
+
+  // class를 이용한 옛날 React 문법
+
+  class Modal2 extends React.Component {
+    constructor(){
+      super();
+      this.state = {
+        name : 'kim',
+        age : 20
+      }
+    }
+    render(){
+      return(
+        <div>안녕{this.state.age}
+          <button onClick={()=>{
+            this.setState({age:21})
+          }}>버튼</button>
+        </div>
+      )
+    }
+  }
 
   return (
     <div className="App">
@@ -109,7 +130,7 @@ function App() {
       </div> */}
 
       {
-        a.map(function(b, i){ // a: 순차적으로 접근한 요소 / i: 인덱스
+        a.map(function(z, i){ // a: 순차적으로 접근한 요소 / i: 인덱스
           return (
               <div className="list">
                 <h4 onClick={()=>{
@@ -124,15 +145,32 @@ function App() {
                   </h4>
                   <p>4월 13일 발행</p>
                   <button onClick={()=>{
-                    a.splice(i,1);
+                    let copy = [...a];
+                    copy.splice(i,1);
+                    b(copy);
+
+                    // a.splice(i,1);
                     따봉.splice(i,1);
                     console.log(a);
                     console.log(따봉);
                   }}>삭제</button>
+                  <Modal2></Modal2>
               </div>
             )
         })
+
+        /*
+        응용1. 글에 아무것도 입력안해도 추가버튼 누르면 추가잘됨
+        => 막기
+
+        응용2. 따봉버튼 수정 (추가, 삭제)
+
+        응용3. 날짜 state로 만들어서 현재 날짜
+
+        */
+
       }
+
 
       {
         /*
@@ -147,9 +185,11 @@ function App() {
       }}/>
 
       <button onClick={(e)=>{
-        b(a => [...a, 입력값]);
+        let copy = [...a];
+        copy.push(입력값);
+        b(copy);
+        // b(copy => [...a, 입력값]);
         따봉변경(따봉 => [...따봉, 0]);
-        console.log(a);
       }}>배열에 추가</button>
       
 
@@ -158,6 +198,8 @@ function App() {
       { // 자바스크립트 쓰려면 이거 열기
         modal == true ? <Modal color={'skyblue'} a={a} b={b} title={title} /> : null
       }
+
+      
 
 
 
